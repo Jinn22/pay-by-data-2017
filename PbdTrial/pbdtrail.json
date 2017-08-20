@@ -1,0 +1,40 @@
+{
+"AppId": "com.example.jack.pbdtrial",
+"Key": "pbdtrial_key123",
+"Duration": 100,
+"Replication": "granted",
+"Location": {
+  "finelocation": {
+    "Frequency": 500,
+    "Used": 200,
+    "Total_Used": 800,
+    "Last_Accessed": "Wed Jul 26 15:11:09 BST 2017"
+  },
+  "coarselocation": {
+    "Frequency": 500,
+    "Used": 200,
+    "Total_Used": 800,
+    "Last_Accessed": "Wed Jul 26 15:11:09 BST 2017"
+  },
+"Identifier": {
+  "DeviceId": "granted",
+  "SimSerialNumber": "refused",
+  "AndroidId": "granted",
+  "GroupIdLevel1": "granted",
+  "Line1Number": "granted",
+  "SubscriberId": "granted",
+  "VoiceMailAlphaTag": "granted",
+  "VoiceMailNumber": "granted"
+},
+"Contact": {
+  "contacts": "granted",
+  "rowId": "granted",
+  "displayName":"granted",
+  "hasPhoneNumber":"granted",
+  "cdkPhoneContentUri":"granted",
+  "cdkPhoneContactId":"granted",
+  "cdkPhoneNumber":"granted"
+},
+"Valid_From": "Wed Jun 31 15:10:43 BST 2017",
+"Valid_Until": "Fri Oct 09 15:10:43 GMT+00:00 2017"
+}
