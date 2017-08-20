@@ -1,0 +1,17 @@
+{
+  "name": "pbdapi2",
+  "version": "1.0.0",
+  "description": "Pay by data demo database",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "body-parser": "*",
+    "express": "*",
+    "gridfs-stream": "^1.1.1",
+    "mongoose": "*"
+  },
+  "author": "Xiujin Kong",
+  "license": "ISC"
+}
