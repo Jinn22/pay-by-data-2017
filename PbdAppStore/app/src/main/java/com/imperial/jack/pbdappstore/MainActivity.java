@@ -32,6 +32,7 @@ import java.util.List;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class MainActivity extends Activity implements ListItemAdapter.InnerItemOnclickListener,
@@ -45,7 +46,6 @@ public class MainActivity extends Activity implements ListItemAdapter.InnerItemO
     protected ListView listview;
     protected List<String> appList;
     protected ListItemAdapter adapter;
-    protected String[] app_name = {"PBD Trial App", "PBD Trail App2", "Another App", "Another APP", "Another App"};
 
     private AlertDialog.Builder builder;
 
@@ -54,20 +54,8 @@ public class MainActivity extends Activity implements ListItemAdapter.InnerItemO
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Initiate the listview
-        listview = (ListView) findViewById(R.id.lv);
+        new GetAllAppsAndSetListViewTask().execute("http://129.31.195.73:3000/api/app_infos");
 
-        //assign value to the List<String>
-        appList = new ArrayList<String>();
-        for (int i = 0; i < app_name.length; i++) {
-            appList.add(app_name[i]);
-        }
-
-        //assign apater to listview
-        adapter = new ListItemAdapter(appList, this);
-        adapter.setOnInnerItemOnClickListener(this);
-        listview.setAdapter(adapter);
-        listview.setOnItemClickListener(this);
     }
 
     @Override
@@ -83,12 +71,12 @@ public class MainActivity extends Activity implements ListItemAdapter.InnerItemO
                 switch (v.getId()) {
                     case R.id.bt1:
                         Log.e(TAG, "first button clicked" + position);
-                        new ShowDPATask().execute("http://192.168.0.45:3000/api/app_info/598f40f3cdc273223d18051e");
+                        new ShowDPATask().execute("http://129.31.195.73:3000/api/app_info/598f40f3cdc273223d18051e");
                         break;
                     case R.id.bt2:
                         Log.e(TAG, "second button clicked" + position);
-                        new InstallDPATask().execute("http://192.168.0.45:3000/api/app_info/598f40f3cdc273223d18051e");
-                        new DownloadApkTask().execute("http://192.168.0.45:3000/api/get_apk/598e0bf590f32b1b57d8a5a7");
+                        new InstallDPATask().execute("http://129.31.195.73:3000/api/app_info/598f40f3cdc273223d18051e");
+                        new DownloadApkTask().execute("http://129.31.195.73:3000/api/get_apk/598e0bf590f32b1b57d8a5a7");
                         break;
                     default:
                         break;
@@ -98,11 +86,11 @@ public class MainActivity extends Activity implements ListItemAdapter.InnerItemO
                 switch (v.getId()) {
                     case R.id.bt1:
                         Log.e(TAG, "first button clicked" + position);
-                        new ShowDPATask().execute("http://192.168.0.45:3000/api/app_info/598f41e9cdc273223d180520");
+                        new ShowDPATask().execute("http://129.31.195.73:3000/api/app_info/598f41e9cdc273223d180520");
                         break;
                     case R.id.bt2:
                         Log.e(TAG, "second button clicked" + position);
-                        new InstallDPATask().execute("http://192.168.0.45:3000/api/app_info/598f41e9cdc273223d180520");
+                        new InstallDPATask().execute("http://129.31.195.73:3000/api/app_info/598f41e9cdc273223d180520");
                         break;
                     default:
                         break;
@@ -115,6 +103,111 @@ public class MainActivity extends Activity implements ListItemAdapter.InnerItemO
 
     }
 
+    /*********************************************************************/
+    //this task get all the app's name from the server to create the list view
+    private class GetAllAppsAndSetListViewTask extends AsyncTask<String, Void, String>{
+        ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(MainActivity.this);
+            progressDialog.setMessage("Loading data");
+            progressDialog.show();
+
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                Log.i(TAG, strings[0]);
+                return getData(strings[0]);
+            } catch (Exception e) {
+                return "network error!";
+            }
+        }
+
+        private String getData(String urlPath) {
+            StringBuilder result = new StringBuilder();
+            BufferedReader bufferedReader;
+            try {
+                //Initialize and config request, then connect to server
+                URL url = new URL(urlPath);
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                Log.i(TAG, "open connection");
+
+                urlConnection.setReadTimeout(50000);
+                Log.i(TAG, "set read timeout");
+
+                urlConnection.setConnectTimeout(50000);
+                Log.i(TAG, "set connect timeout");
+
+                urlConnection.setRequestMethod("GET");
+                Log.i(TAG, "set request method");
+
+                urlConnection.setRequestProperty("Content-Type", "application/json"); //set header
+                Log.i(TAG, "set header");
+
+                urlConnection.connect();
+                Log.i(TAG, "connect!");
+
+                //read data response from server
+                InputStream inputStream = urlConnection.getInputStream();
+                bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String line;
+                while ((line = bufferedReader.readLine()) != null) {
+                    result.append(line).append("\n");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return result.toString();
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            Log.i(TAG, result);
+
+            appList = new ArrayList<>();
+
+            //get JSON data from result string
+            try {
+                JSONArray app_infos = new JSONArray(result);
+                Log.i(TAG, "get json array...");
+                for(int i = 0; i<app_infos.length();i++){
+                    JSONObject app_info = app_infos.getJSONObject(i);
+                    String app_name = app_info.getString("title");
+                    appList.add(app_name);
+                }
+
+                Log.i(TAG, "get app name done....");
+
+            } catch (Exception e) {
+                Log.i(TAG, "Error when reading JSON object");
+            }
+
+            //Initiate the listview
+            listview = (ListView) findViewById(R.id.lv);
+
+
+            //assign apater to listview
+            adapter = new ListItemAdapter(appList,MainActivity.this);
+            adapter.setOnInnerItemOnClickListener(MainActivity.this);
+            listview.setAdapter(adapter);
+            listview.setOnItemClickListener(MainActivity.this);
+
+            //cancel progress dialog
+            if (progressDialog != null)
+                progressDialog.dismiss();
+        }
+
+
+
+    }
+
+    /*****************************************************************************/
     /*ShowDPATask is used to send GET request to server and show the received DPA*/
     private class ShowDPATask extends AsyncTask<String, Void, String> {
         ProgressDialog progressDialog;
@@ -236,6 +329,8 @@ public class MainActivity extends Activity implements ListItemAdapter.InnerItemO
 
     }
 
+    /***********************************************************************/
+    //this task downloadn the dpa and install the dpa into the os
     private class InstallDPATask extends AsyncTask<String, Void, String> {
         ProgressDialog progressDialog;
 
@@ -319,6 +414,8 @@ public class MainActivity extends Activity implements ListItemAdapter.InnerItemO
         }
     }
 
+    /*************************************************************************/
+    //DownloadApkTask downloads the apk and install the apk
     private class DownloadApkTask extends AsyncTask<String, Integer, Boolean> {
         ProgressDialog progressDialog;
 
