@@ -44,17 +44,24 @@ public class MainActivity extends Activity implements ListItemAdapter.InnerItemO
     protected DpaManager dpamanager;
 
     protected ListView listview;
-    protected List<String> appList;
+    protected List<String> appNameList;
+    protected List<String> appIDList;
+    protected List<String> appApkIDList;
     protected ListItemAdapter adapter;
 
     private AlertDialog.Builder builder;
+
+    private String IPAddr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        new GetAllAppsAndSetListViewTask().execute("http://129.31.195.73:3000/api/app_infos");
+        IPAddr = "192.168.0.101:3000";
+
+        //change the web address to the server address
+        new GetAllAppsAndSetListViewTask().execute("http://" + IPAddr + "/api/app_infos");
 
     }
 
@@ -66,46 +73,24 @@ public class MainActivity extends Activity implements ListItemAdapter.InnerItemO
     @Override
     public void itemClick(View v) {
         int position = (Integer) v.getTag();
-        switch (position) {
-            case 0:
-                switch (v.getId()) {
-                    case R.id.bt1:
-                        Log.e(TAG, "first button clicked" + position);
-                        new ShowDPATask().execute("http://129.31.195.73:3000/api/app_info/598f40f3cdc273223d18051e");
-                        break;
-                    case R.id.bt2:
-                        Log.e(TAG, "second button clicked" + position);
-                        new InstallDPATask().execute("http://129.31.195.73:3000/api/app_info/598f40f3cdc273223d18051e");
-                        new DownloadApkTask().execute("http://129.31.195.73:3000/api/get_apk/598e0bf590f32b1b57d8a5a7");
-                        break;
-                    default:
-                        break;
-                }
+        switch (v.getId()) {
+            case R.id.bt1:
+                Log.e(TAG, "first button clicked " + position);
+                new ShowDPATask().execute("http://"+IPAddr+"/api/app_info/"+appIDList.get(position));
                 break;
-            case 1:
-                switch (v.getId()) {
-                    case R.id.bt1:
-                        Log.e(TAG, "first button clicked" + position);
-                        new ShowDPATask().execute("http://129.31.195.73:3000/api/app_info/598f41e9cdc273223d180520");
-                        break;
-                    case R.id.bt2:
-                        Log.e(TAG, "second button clicked" + position);
-                        new InstallDPATask().execute("http://129.31.195.73:3000/api/app_info/598f41e9cdc273223d180520");
-                        break;
-                    default:
-                        break;
-                }
+            case R.id.bt2:
+                Log.e(TAG, "second button clicked " + position);
+                new InstallDPATask().execute("http://"+IPAddr+"/api/app_info/"+appIDList.get(position));
+                new DownloadApkTask().execute("http://"+IPAddr+"/api/get_apk/"+appApkIDList.get(position));
                 break;
             default:
                 break;
         }
-
-
     }
 
     /*********************************************************************/
     //this task get all the app's name from the server to create the list view
-    private class GetAllAppsAndSetListViewTask extends AsyncTask<String, Void, String>{
+    private class GetAllAppsAndSetListViewTask extends AsyncTask<String, Void, String> {
         ProgressDialog progressDialog;
 
         @Override
@@ -134,19 +119,11 @@ public class MainActivity extends Activity implements ListItemAdapter.InnerItemO
                 //Initialize and config request, then connect to server
                 URL url = new URL(urlPath);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                Log.i(TAG, "open connection");
-
                 urlConnection.setReadTimeout(50000);
-                Log.i(TAG, "set read timeout");
-
                 urlConnection.setConnectTimeout(50000);
-                Log.i(TAG, "set connect timeout");
-
                 urlConnection.setRequestMethod("GET");
-                Log.i(TAG, "set request method");
-
                 urlConnection.setRequestProperty("Content-Type", "application/json"); //set header
-                Log.i(TAG, "set header");
+                Log.i(TAG, "connecting settings are done! ");
 
                 urlConnection.connect();
                 Log.i(TAG, "connect!");
@@ -170,22 +147,30 @@ public class MainActivity extends Activity implements ListItemAdapter.InnerItemO
             super.onPostExecute(result);
             Log.i(TAG, result);
 
-            appList = new ArrayList<>();
+            appNameList = new ArrayList<>();
+            appIDList = new ArrayList<>();
+            appApkIDList = new ArrayList<>();
 
             //get JSON data from result string
             try {
                 JSONArray app_infos = new JSONArray(result);
                 Log.i(TAG, "get json array...");
-                for(int i = 0; i<app_infos.length();i++){
+                for (int i = 0; i < app_infos.length(); i++) {
                     JSONObject app_info = app_infos.getJSONObject(i);
                     String app_name = app_info.getString("title");
-                    appList.add(app_name);
+                    appNameList.add(app_name);
+
+                    String app_id = app_info.getString("_id");
+                    appIDList.add(app_id);
+
+                    String app_apk = app_info.getString("apk_id");
+                    appApkIDList.add(app_apk);
                 }
 
                 Log.i(TAG, "get app name done....");
 
             } catch (Exception e) {
-                Log.i(TAG, "Error when reading JSON object");
+                Log.i(TAG, e.getMessage());
             }
 
             //Initiate the listview
@@ -193,7 +178,7 @@ public class MainActivity extends Activity implements ListItemAdapter.InnerItemO
 
 
             //assign apater to listview
-            adapter = new ListItemAdapter(appList,MainActivity.this);
+            adapter = new ListItemAdapter(appNameList, MainActivity.this);
             adapter.setOnInnerItemOnClickListener(MainActivity.this);
             listview.setAdapter(adapter);
             listview.setOnItemClickListener(MainActivity.this);
@@ -202,7 +187,6 @@ public class MainActivity extends Activity implements ListItemAdapter.InnerItemO
             if (progressDialog != null)
                 progressDialog.dismiss();
         }
-
 
 
     }
@@ -296,19 +280,11 @@ public class MainActivity extends Activity implements ListItemAdapter.InnerItemO
                 //Initialize and config request, then connect to server
                 URL url = new URL(urlPath);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                Log.i(TAG, "open connection");
-
                 urlConnection.setReadTimeout(50000);
-                Log.i(TAG, "set read timeout");
-
                 urlConnection.setConnectTimeout(50000);
-                Log.i(TAG, "set connect timeout");
-
                 urlConnection.setRequestMethod("GET");
-                Log.i(TAG, "set request method");
-
                 urlConnection.setRequestProperty("Content-Type", "application/json"); //set header
-                Log.i(TAG, "set header");
+                Log.i(TAG, "connection settings are done!");
 
                 urlConnection.connect();
                 Log.i(TAG, "connect!");
@@ -383,19 +359,11 @@ public class MainActivity extends Activity implements ListItemAdapter.InnerItemO
                 //Initialize and config request, then connect to server
                 URL url = new URL(urlPath);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                Log.i(TAG, "open connection");
-
                 urlConnection.setReadTimeout(50000);
-                Log.i(TAG, "set read timeout");
-
                 urlConnection.setConnectTimeout(50000);
-                Log.i(TAG, "set connect timeout");
-
                 urlConnection.setRequestMethod("GET");
-                Log.i(TAG, "set request method");
-
                 urlConnection.setRequestProperty("Content-Type", "application/jdon"); //set header
-                Log.i(TAG, "set header");
+                Log.i(TAG, "connection settings are done! ");
 
                 urlConnection.connect();
                 Log.i(TAG, "connect!");
@@ -468,19 +436,11 @@ public class MainActivity extends Activity implements ListItemAdapter.InnerItemO
                 //Initialize and config request, then connect to server
                 URL url = new URL(arg0[0]);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                Log.i(TAG, "open connection");
-
                 urlConnection.setReadTimeout(50000);
-                Log.i(TAG, "set read timeout");
-
                 urlConnection.setConnectTimeout(50000);
-                Log.i(TAG, "set connect timeout");
-
                 urlConnection.setRequestMethod("GET");
-                Log.i(TAG, "set request method");
-
                 urlConnection.setRequestProperty("Content-Type", "application/jdon"); //set header
-                Log.i(TAG, "set header");
+                Log.i(TAG, "connection settings are done! ");
 
                 urlConnection.connect();
                 Log.i(TAG, "connect!");
