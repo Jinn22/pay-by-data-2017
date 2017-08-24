@@ -33,35 +33,57 @@ public class MainActivity extends Activity implements LocationListener {
         Log.d(TAG, "created pbdDeviceManager");
 
         Button btn1 = (Button) findViewById(R.id.button1);
-        btn1.setOnClickListener(new View.OnClickListener(){
+        btn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String id = pbdmanager.getDeviceId(KEY);
                 TextView tv1 = (TextView) findViewById(R.id.textView3);
                 tv1.setText(id);
-                Toast.makeText(getApplicationContext(), "Device id returned: " + id ,Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Device id returned: " + id, Toast.LENGTH_SHORT).show();
             }
         });
 
         Button btn2 = (Button) findViewById(R.id.button2);
-        btn2.setOnClickListener(new View.OnClickListener(){
+        btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String androidId = pbdmanager.getAndroidId(KEY);
                 TextView tv2 = (TextView) findViewById(R.id.textView5);
                 tv2.setText(androidId);
-                Toast.makeText(getApplicationContext(), "Android id returned: " + androidId , Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Android id returned: " + androidId, Toast.LENGTH_SHORT).show();
             }
         });
 
         Button btn3 = (Button) findViewById(R.id.button3);
-        btn3.setOnClickListener(new View.OnClickListener(){
+        btn3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String simId = pbdmanager.getSimSerialNumber(KEY);
                 TextView tv3 = (TextView) findViewById(R.id.textView7);
                 tv3.setText(simId);
-                Toast.makeText(getApplicationContext(), "Sim id returned: " + simId ,Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Sim id returned: " + simId, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        Button btn4 = (Button) findViewById(R.id.button4);
+        btn4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String subID = pbdmanager.getSubscriberId(KEY);
+                TextView tv4 = (TextView) findViewById(R.id.textView9);
+                tv4.setText(subID);
+                Toast.makeText(getApplicationContext(), "Subscriber id returned: " + subID, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        Button btn5 = (Button) findViewById(R.id.button5);
+        btn5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String lineNo = pbdmanager.getLine1Number(KEY);
+                TextView tv5 = (TextView) findViewById(R.id.textView11);
+                tv5.setText(lineNo);
+                Toast.makeText(getApplicationContext(), "Line 1 Number returned: " + lineNo, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -90,24 +112,30 @@ public class MainActivity extends Activity implements LocationListener {
     @Override
     public void onLocationChanged(Location Loc) {
         Log.d(TAG, "Location Manager receive an intent");
-    	/*locMgr_count++;
+        /*locMgr_count++;
         timings.addSplit(Integer.toString(locMgr_count));
         timings.dumpToLog();*/
 
         double lat = Loc.getLatitude();
         double lon = Loc.getLongitude();
         String l = "Longitude: " + lon + " Latitude: " + lat;
-        Toast.makeText(getApplicationContext(), l ,Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), l, Toast.LENGTH_SHORT).show();
     }
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {}
-    @Override
-    public void onProviderEnabled(String provider) {}
-    @Override
-    public void onProviderDisabled(String provider) {}
 
     @Override
-    protected void onStop(){
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+    }
+
+    @Override
+    protected void onStop() {
         super.onStop();
         //unregister the receiver and call onStop in PbdLocManager
         unregisterReceiver(receiver);
@@ -121,24 +149,23 @@ public class MainActivity extends Activity implements LocationListener {
 
             Log.d(TAG, "MyReceiver receive an intent");
 
-            try{
+            try {
                 PbdLocation pbdLoc = pbdmanager.getPbdLocation(KEY);
 				/*pbdLocMgr_count++;
 				timings2.addSplit(Integer.toString(pbdLocMgr_count));
 				timings2.dumpToLog();*/
 
-                if(pbdLoc == null){
+                if (pbdLoc == null) {
                     String str = "reached dpa limit, can't get location";
-                    Toast.makeText(getApplicationContext(), str,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), str, Toast.LENGTH_SHORT).show();
                     return;
                 }
                 double lat = pbdLoc.getLatitude();
                 double lon = pbdLoc.getLongitude();
                 String l = "Pbd Longitude: " + lon + " Latitude: " + lat;
-                Toast.makeText(getApplicationContext(), l ,Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), l, Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "SUCCESS to call getLoc function");
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 Log.d(TAG, "FAILED to call getLoc function");
                 e.printStackTrace();
             }

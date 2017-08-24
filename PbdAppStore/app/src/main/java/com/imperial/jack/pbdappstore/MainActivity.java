@@ -12,6 +12,7 @@ import android.util.Log;
 import android.os.DpaManager;
 
 // Libraries for installing DPA
+import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -58,11 +59,17 @@ public class MainActivity extends Activity implements ListItemAdapter.InnerItemO
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        IPAddr = "192.168.0.101:3000";
+        IPAddr = "192.168.0.103:3000";
 
         //change the web address to the server address
         new GetAllAppsAndSetListViewTask().execute("http://" + IPAddr + "/api/app_infos");
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
     }
 
     @Override
@@ -76,12 +83,12 @@ public class MainActivity extends Activity implements ListItemAdapter.InnerItemO
         switch (v.getId()) {
             case R.id.bt1:
                 Log.e(TAG, "first button clicked " + position);
-                new ShowDPATask().execute("http://"+IPAddr+"/api/app_info/"+appIDList.get(position));
+                new ShowDPATask().execute("http://" + IPAddr + "/api/app_info/" + appIDList.get(position));
                 break;
             case R.id.bt2:
                 Log.e(TAG, "second button clicked " + position);
-                new InstallDPATask().execute("http://"+IPAddr+"/api/app_info/"+appIDList.get(position));
-                new DownloadApkTask().execute("http://"+IPAddr+"/api/get_apk/"+appApkIDList.get(position));
+                new InstallDPATask().execute("http://" + IPAddr + "/api/app_info/" + appIDList.get(position));
+                new DownloadApkTask().execute("http://" + IPAddr + "/api/get_apk/" + appApkIDList.get(position));
                 break;
             default:
                 break;
@@ -306,7 +313,7 @@ public class MainActivity extends Activity implements ListItemAdapter.InnerItemO
     }
 
     /***********************************************************************/
-    //this task downloadn the dpa and install the dpa into the os
+    //this task download the dpa and install the dpa into the os
     private class InstallDPATask extends AsyncTask<String, Void, String> {
         ProgressDialog progressDialog;
 
@@ -342,6 +349,7 @@ public class MainActivity extends Activity implements ListItemAdapter.InnerItemO
 
                 dpamanager.installDPA(KEY, result);
                 Log.i(TAG, "install app's dpa");
+
             } catch (Exception e) {
                 Log.i(TAG, "Error in getting app key or error in calling install DPA");
             }
