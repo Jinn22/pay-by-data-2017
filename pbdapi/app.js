@@ -3,6 +3,7 @@ var app = express();
 var bodyParser = require ('body-parser');
 var mongoose = require ('mongoose');
 
+app.use(express.static(__dirname));
 app.use(bodyParser.json());
 
 App_info = require('./models/app_info');
@@ -16,9 +17,10 @@ var conn = mongoose.connection;
 var Schema = mongoose.Schema;
 Grid.mongo = mongoose.mongo;
 
+/*
 app.get('/',function(req, res){
   res.send('Hello World!');
-});
+});*/
 
 app.get('/api/app_infos', (req, res) => {
 	App_info.getApp_infos((err, app_info) => {
