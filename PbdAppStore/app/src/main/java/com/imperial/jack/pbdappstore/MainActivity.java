@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -64,6 +65,29 @@ public class MainActivity extends Activity implements ListItemAdapter.InnerItemO
         //change the web address to the server address
         new GetAllAppsAndSetListViewTask().execute("http://" + IPAddr + "/api/app_infos");
 
+        //show all the expired DPA
+        Button exDPABtn = (Button) findViewById(R.id.bt3);
+        exDPABtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i(TAG, "expired clicked!");
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("Expired DPA");
+                //
+
+
+                final String[] items = {"item1", "item2"};
+                builder.setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toast.makeText(getApplicationContext(), "You clicked " + items[i], Toast.LENGTH_SHORT).show();
+                    }
+                });
+                builder.setCancelable(true);
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        });
     }
 
     @Override

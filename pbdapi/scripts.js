@@ -1,7 +1,5 @@
 $(function(){
 
-  var $apps = $('#app_list');
-
   //GET
   $.ajax({
     type: 'GET',
