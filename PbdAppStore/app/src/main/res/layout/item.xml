@@ -12,9 +12,8 @@
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="120dp"
-            android:layout_height="110dp"
-            android:background="@mipmap/ic_launcher" />
+            android:layout_width="100dp"
+            android:layout_height="100dp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -27,6 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.19"
+                android:paddingLeft="15dp"
                 android:text="PBD Trail App"
                 android:textColor="@color/abc_input_method_navigation_guard"
                 android:textSize="18sp" />
@@ -40,8 +40,9 @@
                     android:id="@+id/textView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Ratings:"
-                    android:max="5"/>
+                    android:max="5"
+                    android:paddingLeft="15dp"
+                    android:text="Ratings:" />
 
                 <RatingBar
                     android:id="@+id/ratingBar3"
@@ -63,6 +64,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.68"
+                android:paddingLeft="15dp"
                 android:text="This app's description goes here....." />
         </LinearLayout>
 

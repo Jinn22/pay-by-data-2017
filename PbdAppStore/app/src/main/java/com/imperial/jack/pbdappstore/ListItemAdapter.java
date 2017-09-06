@@ -9,16 +9,19 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ListItemAdapter extends BaseAdapter implements OnClickListener {
     private List<String> mList;
     private Context mContext;
+    private final Integer[] imageId;
     private InnerItemOnclickListener mListener;
 
-    public ListItemAdapter(List<String> mList, Context mContext) {
+    public ListItemAdapter(List<String> mList, Context mContext,Integer[] imageId) {
         this.mList = mList;
         this.mContext = mContext;
+        this.imageId = imageId;
     }
 
     @Override
@@ -46,6 +49,7 @@ public class ListItemAdapter extends BaseAdapter implements OnClickListener {
             viewHolder.bt1 = (Button) convertView.findViewById(R.id.bt1);
             viewHolder.bt2 = (Button) convertView.findViewById(R.id.bt2);
             viewHolder.tv = (TextView) convertView.findViewById(R.id.tv);
+            viewHolder.imageView = (ImageView) convertView.findViewById(R.id.imageView);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -55,12 +59,14 @@ public class ListItemAdapter extends BaseAdapter implements OnClickListener {
         viewHolder.bt1.setTag(position);
         viewHolder.bt2.setTag(position);
         viewHolder.tv.setText(mList.get(position));
+        viewHolder.imageView.setImageResource(imageId[position]);
         return convertView;
     }
 
     public final static class ViewHolder {
         Button bt1, bt2;
         TextView tv;
+        ImageView imageView;
     }
 
     interface InnerItemOnclickListener {

@@ -50,6 +50,7 @@ public class MainActivity extends Activity implements ListItemAdapter.InnerItemO
     protected List<String> appIDList;
     protected List<String> appApkIDList;
     protected ListItemAdapter adapter;
+    protected Integer [] imageid;
 
     private AlertDialog.Builder builder;
 
@@ -60,7 +61,7 @@ public class MainActivity extends Activity implements ListItemAdapter.InnerItemO
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        IPAddr = "192.168.0.103:3000";
+        IPAddr = "129.31.198.131:3000";
 
         //change the web address to the server address
         new GetAllAppsAndSetListViewTask().execute("http://" + IPAddr + "/api/app_infos");
@@ -73,10 +74,9 @@ public class MainActivity extends Activity implements ListItemAdapter.InnerItemO
                 Log.i(TAG, "expired clicked!");
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setTitle("Expired DPA");
-                //
 
 
-                final String[] items = {"item1", "item2"};
+                final String[] items = {"<Expired DPA 1>", "<Expired DPA 2>"};
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -207,9 +207,27 @@ public class MainActivity extends Activity implements ListItemAdapter.InnerItemO
             //Initiate the listview
             listview = (ListView) findViewById(R.id.lv);
 
+            int length = appNameList.size();
+            imageid = new Integer[length];
+            for(int i = 0; i<length; i++){
+                imageid[i]=R.drawable.androidicon;
+                if(i==0)
+                    imageid[i] = R.drawable.pbd3;
+                if(i==1)
+                    imageid[i] = R.drawable.pbd2;
+                if(i==2)
+                    imageid[i] = R.drawable.pbd1;
+                if(i==3)
+                    imageid[i] = R.drawable.pbd4;
+                if(i==4)
+                    imageid[i] = R.drawable.pbd5;
+                if(i==5)
+                    imageid[i] = R.drawable.pbd6;
+            }
+
 
             //assign apater to listview
-            adapter = new ListItemAdapter(appNameList, MainActivity.this);
+            adapter = new ListItemAdapter(appNameList, MainActivity.this, imageid);
             adapter.setOnInnerItemOnClickListener(MainActivity.this);
             listview.setAdapter(adapter);
             listview.setOnItemClickListener(MainActivity.this);
@@ -218,8 +236,6 @@ public class MainActivity extends Activity implements ListItemAdapter.InnerItemO
             if (progressDialog != null)
                 progressDialog.dismiss();
         }
-
-
     }
 
     /*****************************************************************************/
