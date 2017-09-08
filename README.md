@@ -1,10 +1,10 @@
 # README #
+User guide to use the code:
 
 1. Prepare an Android device for PBD services
-The following guide was based on: https://github.com/Guanjie-Liu/Pay-By-Data-Android/wiki/Compiling-&-Installing-PBD-OS } by Liu (2016).
+(The following guide was based on: https://github.com/Guanjie-Liu/Pay-By-Data-Android/wiki/Compiling-&-Installing-PBD-OS } by Liu (2016).
 The official guide of building a system from AOSP is on:
-https://source.android.com/source/
-
+https://source.android.com/source/)
 
 a. Set up a Linux build environment with Ubuntu 12.04  and allocate enough space for built. However, it is suggested to use more up-to-date version of Ubuntu (such as 14.04 as suggested on the official website) because most of the build tools are available within that system.
 
