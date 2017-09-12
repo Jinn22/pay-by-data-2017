@@ -1,5 +1,10 @@
 # README #
-User guide to use the code:
+PBD model which was introduced by Guo and Wu (2013) aims to provide a platform which
+regulates types of data and limits of authority applications can have to access mobile users’
+data.
+This project add PBD AppStore and Marketplace into the PBD Model. 
+
+User guide:
 
 I. Prepare an Android device for PBD services
 (The following guide was based on: https://github.com/Guanjie-Liu/Pay-By-Data-Android/wiki/Compiling-&-Installing-PBD-OS } by Liu (2016).
@@ -32,6 +37,7 @@ k. Install the system into the device. Note android sdk should be installed prop
 l. Use the same method to make PBD SDK and import the SDK into Android Studio. 
 
 II. Install the PBD AppStore
+
 a. Download the code from Git. Open the file in Android Studio.
 
 b. Import the PBD SDK into Android Studio by open Project Structure window (under file/project structure). Change the path of the SDK to the path of the PBD SDK you place. 
@@ -39,6 +45,7 @@ b. Import the PBD SDK into Android Studio by open Project Structure window (unde
 c. Connect your device with computer by USB debugging mode, and run the app on your device. 
 
 III. Set up the Sever
+
 a. Download the source code from the repository. Make sure MongoDB, npm was installed properly.
  
 b. Navigate to the root of the source code in the terminal. Then use npm init and npm install to initialize and install all the required packages. 
