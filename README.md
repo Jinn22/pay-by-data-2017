@@ -2,7 +2,7 @@
 PBD model which was introduced by Guo and Wu (2013) aims to provide a platform which
 regulates types of data and limits of authority applications can have to access mobile users’
 data.
-This project add PBD AppStore and Marketplace into the PBD Model. 
+This project adds PBD AppStore and Marketplace into the PBD Model. 
 
 User guide:
 
@@ -50,8 +50,8 @@ a. Download the source code from the repository. Make sure MongoDB, npm was inst
  
 b. Navigate to the root of the source code in the terminal. Then use npm init and npm install to initialize and install all the required packages. 
 
-c. nodemon app.js to run the server. Additionally, type localhost:3000/api/app\_infos in a web browser to check whether the sever can respond to the request successfully. 
+c. nodemon app.js to run the server. Additionally, type localhost:3000/api/app_infos in a web browser to check whether the sever can respond to the request successfully. 
 
 d. To upload an apk, put the apk file under folder apk_fils, then run nodemon file_driver.js, then the apk would be uploaded into the database.
 
-e. To upload a DPA file, start mongo shell by mongo, then switch to a pre-defined database by use <database-name>. Insert a new document by db.<collection-name>.insert{<JSON-here>}. 
+e. To upload a DPA file, start mongo shell by mongo, then switch to a pre-defined database by use database-name. Insert a new document by db.collection-name.insert{JSON-here}. 

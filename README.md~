@@ -1,5 +1,10 @@
 # README #
-User guide to use the code:
+PBD model which was introduced by Guo and Wu (2013) aims to provide a platform which
+regulates types of data and limits of authority applications can have to access mobile users’
+data.
+This project add PBD AppStore and Marketplace into the PBD Model. 
+
+User guide:
 
 I. Prepare an Android device for PBD services
 (The following guide was based on: https://github.com/Guanjie-Liu/Pay-By-Data-Android/wiki/Compiling-&-Installing-PBD-OS } by Liu (2016).
